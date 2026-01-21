@@ -4,18 +4,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
-if(o2_WITH_QT5)
-    find_package(Qt5 COMPONENTS Core Network REQUIRED)
-else(o2_WITH_QT5)
-    set(QT_USE_QTNETWORK true)
-    set(QT_USE_QTSCRIPT true)
-    find_package(Qt4 REQUIRED)
-endif(o2_WITH_QT5)
-#find_package(QJson REQUIRED)
-
-if (NOT o2_WITH_QT5)
-    include( ${QT_USE_FILE} )
-endif(NOT o2_WITH_QT5)
+find_package(Qt6 COMPONENTS Core Network REQUIRED)
 
 
 set( o2_SRCS
@@ -192,15 +181,10 @@ if(o2_WITH_MSGRAPH)
 endif(o2_WITH_MSGRAPH)
 
 if(o2_WITH_KEYCHAIN)
-    if (Qt5Core_DIR)
-        find_package(Qt5Keychain REQUIRED)
-    else()
-        find_package(QtKeychain REQUIRED)
-    endif()
-    if(QTKEYCHAIN_FOUND OR QT5KEYCHAIN_FOUND)
-        MESSAGE("Found QTKeychain")
-        list(APPEND LINK_TARGETS ${QTKEYCHAIN_LIBRARY})
-        include_directories(${QTKEYCHAIN_INCLUDE_DIR})
+    find_package(Qt6Keychain REQUIRED)
+    if(Qt6Keychain_FOUND)
+        MESSAGE("Found Qt6Keychain")
+        list(APPEND LINK_TARGETS Qt6Keychain::Qt6Keychain)
         set( o2_SRCS
                 ${o2_SRCS}
                 o0keychainstore.cpp
@@ -210,18 +194,13 @@ if(o2_WITH_KEYCHAIN)
                 o0keychainstore.h
                 )
     else()
-        MESSAGE("Qt5Keychain or QtKeychain is required")
+        MESSAGE("Qt6Keychain is required")
     endif()
-
-
 endif(o2_WITH_KEYCHAIN)
 
 
 
 
-if(NOT o2_WITH_QT5)
-    add_definitions(${QT4_DEFINITIONS})
-endif(NOT o2_WITH_QT5)
 
 if(BUILD_SHARED_LIBS AND APPLE AND POLICY CMP0042) # in CMake >= 2.8.12
     cmake_policy(SET CMP0042 OLD)
@@ -234,11 +213,7 @@ if(BUILD_SHARED_LIBS)
     add_definitions( -DO2_SHARED_LIB )
 endif(BUILD_SHARED_LIBS)
 
-if(o2_WITH_QT5)
-    target_link_libraries( o2 Qt5::Core Qt5::Network ${LINK_TARGETS})
-else(o2_WITH_QT5)
-    target_link_libraries( o2 ${QT_LIBRARIES} ${LINK_TARGETS})
-endif(o2_WITH_QT5)
+target_link_libraries( o2 Qt6::Core Qt6::Network ${LINK_TARGETS})
 
 if(BUILD_SHARED_LIBS)
     if(APPLE)

@@ -4,7 +4,7 @@
 #include "o0keychainstore.h"
 
 #include <QDebug>
-#include <keychain.h>
+#include <qt6keychain/keychain.h>
 #include <QtCore/QDataStream>
 #include <QtCore/QBuffer>
 #include <QtCore/QEventLoop>
