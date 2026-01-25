@@ -203,7 +203,7 @@ endif(o2_WITH_KEYCHAIN)
 
 
 if(BUILD_SHARED_LIBS AND APPLE AND POLICY CMP0042) # in CMake >= 2.8.12
-    cmake_policy(SET CMP0042 OLD)
+#    cmake_policy(SET CMP0042 OLD)
     set(CMAKE_MACOSX_RPATH OFF) # don't embed @rpath in install name
 endif(BUILD_SHARED_LIBS AND APPLE AND POLICY CMP0042)
 
