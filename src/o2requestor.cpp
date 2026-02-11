@@ -293,10 +293,12 @@ void O2Requestor::finish() {
     reply_->disconnect(this);
     reply_->deleteLater();
     QList<QNetworkReply::RawHeaderPair> headers = reply_->rawHeaderPairs();
+    int httpStatusCode = reply_->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     Q_EMIT finished(id_, error_, data);
     Q_EMIT finished(id_, error_, reply_->errorString(), data);
     Q_EMIT finished(id_, error_, data, headers);
     Q_EMIT finished(id_, error_, reply_->errorString(), data, headers);
+    Q_EMIT finished(id_, httpStatusCode, error_, reply_->errorString(), data, headers);
 }
 
 void O2Requestor::retry() {
